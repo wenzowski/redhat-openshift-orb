@@ -162,6 +162,9 @@ jobs:
       password:
         type: string
         default: ""
+      token:
+        type: string
+        default: ""
       openshift-platform-version:
         type: string
       sleep:
@@ -181,6 +184,7 @@ jobs:
           server-address: << parameters.server-address >>
           username: << parameters.username >>
           password: << parameters.password >>
+          token: << parameters.token >>
           insecure-skip-tls-verify: true
           openshift-platform-version: << parameters.openshift-platform-version >>
       - quick-cluster-tests:
@@ -237,6 +241,9 @@ jobs:
       password:
         type: string
         default: ""
+      token:
+        type: string
+        default: ""
       openshift-platform-version:
         type: string
     executor: << parameters.executor >>
@@ -253,6 +260,7 @@ jobs:
           server-address: << parameters.server-address >>
           username: << parameters.username >>
           password: << parameters.password >>
+          token: << parameters.token >>
           insecure-skip-tls-verify: true
           openshift-platform-version: << parameters.openshift-platform-version >>
       - when:
