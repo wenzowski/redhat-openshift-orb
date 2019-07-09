@@ -357,8 +357,7 @@ workflows:
           executor: redhat-openshift/default
           local-cluster: false
           server-address: ${SERVER_ADDRESS}
-          username: ${USERNAME}
-          password: ${PASSWORD}
+          token: ${TOKEN}
           openshift-platform-version: "4.x"
           insecure-skip-tls-verify: true
           filters: *integration_test_filters
@@ -378,8 +377,7 @@ workflows:
           executor: redhat-openshift/default
           local-cluster: false
           server-address: ${SERVER_ADDRESS}
-          username: ${USERNAME}
-          password: ${PASSWORD}
+          token: ${TOKEN}
           openshift-platform-version: "4.x"
           requires:
             - test-update-kubeconfig-remote-cluster
@@ -389,8 +387,7 @@ workflows:
           executor: redhat-openshift/default
           local-cluster: false
           server-address: ${SERVER_ADDRESS}
-          username: ${USERNAME}
-          password: ${PASSWORD}
+          token: ${TOKEN}
           openshift-platform-version: "4.x"
           requires:
             - test-cluster-remote
