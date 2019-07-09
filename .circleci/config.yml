@@ -319,7 +319,7 @@ workflows:
           requires:
             - orb-tools/pack
       - orb-tools/publish-dev:
-          orb-name: circleci/redhat-openshift
+          orb-name: wenzowski/redhat-openshift
           context: orb-publishing
           requires:
             - queue/block_workflow
@@ -413,7 +413,7 @@ workflows:
             - pre-orb-promotion-check
           filters: *orb_promotion_filters
       - promote-orb-into-production:
-          orb-name: circleci/redhat-openshift
+          orb-name: wenzowski/redhat-openshift
           orb-ref: dev:${CIRCLE_SHA1:0:7}
           context: orb-publishing
           requires:
