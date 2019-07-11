@@ -47,6 +47,7 @@ steps:
         SKIP_REGISTRY_CHECK="<< parameters.skip-registry-check >>"
         USE_EXISTING_CONFIG="<< parameters.use-existing-config >>"
 
+        mkdir -p /home/circleci/.docker
         cat \<< EOF >/home/circleci/.docker/config.json
         {
          "insecure-registries": [
