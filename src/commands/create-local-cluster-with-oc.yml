@@ -69,3 +69,6 @@ steps:
           set -- "$@" --use-existing-config=true
         fi
         oc cluster up "$@"
+        oc login -u system:admin
+        oc -n default set env dc/docker-registry REGISTRY_OPENSHIFT_SERVER_ADDR=docker-registry.default.svc:5000
+        oc login -u developer
