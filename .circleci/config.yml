@@ -13,7 +13,7 @@ orb_promotion_filters: &orb_promotion_filters
     only: /^(major|minor|patch)-release-v\d+\.\d+\.\d+$/
 
 orbs:
-  redhat-openshift: circleci/redhat-openshift@dev:alpha
+  redhat-openshift: wenzowski/redhat-openshift@dev:alpha
   cli: circleci/circleci-cli@0.1.2
   orb-tools: circleci/orb-tools@7.3.0
   queue: eddiewebb/queue@1.1.2
@@ -74,6 +74,10 @@ commands:
             fi
             oc new-project mytest
             oc new-app centos/ruby-25-centos7~https://github.com/sclorg/ruby-ex.git
+            sleep 1
+            oc logs -f bc/ruby-ex
+            oc get build/ruby-ex-1
+            if [ $(oc get build/ruby-ex-1 -o=go-template='{{ .status.phase }}') != 'Complete' ]; then exit 1; fi
             kubectl get services
 jobs:
   setup-cluster-with-oc:
@@ -319,13 +323,13 @@ workflows:
           requires:
             - orb-tools/pack
       - orb-tools/publish-dev:
-          orb-name: circleci/redhat-openshift
+          orb-name: wenzowski/redhat-openshift
           context: orb-publishing
           requires:
             - queue/block_workflow
       - orb-tools/trigger-integration-workflow:
           name: trigger-integration-dev
-          ssh-fingerprints: 93:1c:e5:85:3c:4f:1e:5a:0a:b3:2e:91:33:e5:1e:ef
+          ssh-fingerprints: 09:a3:dd:4b:34:98:fb:f8:7e:84:02:0b:0e:4f:f2:b6
           tag: integration
           use-git-diff: false
           static-release-type: patch
@@ -336,7 +340,7 @@ workflows:
               ignore: master
       - orb-tools/trigger-integration-workflow:
           name: trigger-integration-master
-          ssh-fingerprints: 93:1c:e5:85:3c:4f:1e:5a:0a:b3:2e:91:33:e5:1e:ef
+          ssh-fingerprints: 09:a3:dd:4b:34:98:fb:f8:7e:84:02:0b:0e:4f:f2:b6
           tag: master
           use-git-diff: false
           static-release-type: patch
@@ -413,7 +417,7 @@ workflows:
             - pre-orb-promotion-check
           filters: *orb_promotion_filters
       - promote-orb-into-production:
-          orb-name: circleci/redhat-openshift
+          orb-name: wenzowski/redhat-openshift
           orb-ref: dev:${CIRCLE_SHA1:0:7}
           context: orb-publishing
           requires:
