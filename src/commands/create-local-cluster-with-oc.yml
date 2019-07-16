@@ -47,20 +47,8 @@ steps:
         SKIP_REGISTRY_CHECK="<< parameters.skip-registry-check >>"
         USE_EXISTING_CONFIG="<< parameters.use-existing-config >>"
 
-        mkdir -p /home/circleci/.docker
-        cat \<< EOF >/home/circleci/.docker/config.json
-        {
-         "insecure-registries": [
-         "172.30.0.0/16"
-         ]
-        }
-        EOF
-
-        oc adm ca create-signer-cert \
-          --cert "my-ca.crt" \
-          --key "my-ca.key" \
-          --serial "my-ca.serial.txt" \
-          --name="my-ca@localhost"
+        echo "{"insecure-registries": ["172.30.0.0/16"]}" | sudo tee /etc/docker/daemon.json # see https://github.com/openshift/origin/blob/release-3.11/docs/cluster_up_down.md
+        sudo /etc/init.d/docker restart
 
         if [ -n "${HOST_DATA_DIR}" ]; then
           set -- "$@" --host-data-dir="${HOST_DATA_DIR}"
@@ -74,9 +62,4 @@ steps:
         if [ "${USE_EXISTING_CONFIG}" == "true" ]; then
           set -- "$@" --use-existing-config=true
         fi
-        oc cluster up "$@" --certificate-authority=my-ca.crt
-        # oc login -u system:admin
-        # oc -n default get svc/docker-registry --as system:admin
-        # oc -n default expose svc/docker-registry --hostname=docker-registry-default.127.0.0.1.nip.io --as system:admin
-        # oc -n default set env dc/docker-registry REGISTRY_OPENSHIFT_SERVER_ADDR=docker-registry-default.127.0.0.1.nip.io --as system:admin
-        # oc login -u developer
+        oc cluster up "$@"
